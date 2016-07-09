@@ -1,7 +1,5 @@
 #Memory
 
-
-
 #Introduction
 
 My name is Memory but friends calls me MEM, and i'm 
@@ -18,7 +16,14 @@ do it instead :)
 - `npm i`
 - ``p=`pwd` && cd /usr/bin && sudo ln -s $p/mem.js mem && cd -``
 - `mem help`
-
+###Or if you do not want install node and deps just copy binary 
+ ( if arch will match [Mach-O 64-bit executable x86_64])
+    
+- `git clone https://github.com/spalax/mem.git`
+- `cd mem/bin`
+- `tar -xzvf mem.tgz`
+- `sudo cp mem /usr/bin`
+- `mem help`
 
 ##CLI
 ###Commands:
