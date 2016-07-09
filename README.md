@@ -19,7 +19,7 @@ do it instead :)
 
 ###Or if you do not want install node and deps just copy binary 
  ( if arch will match [Mach-O 64-bit executable x86_64])    
-- `wget https://github.com/spalax/mem/raw/master/bin/mem.tgz`
+- `curl -O https://github.com/spalax/mem/raw/master/bin/mem.tgz`
 - `tar -xzvf mem.tgz`
 - `sudo mv mem /usr/bin`
 - `mem help`
@@ -30,19 +30,18 @@ If it will irritating you, you can just run `mem` like this `mem [commands] | se
 
 ##CLI
 ###Commands:
-if nothing defined is eqaul with mem save [cmd]<br />
 `remind|r [cmd_name]` - and i will remind you the command which you ask me to remember<br />
 `forget|rm [cmd_name]` - and i will forget command which i remembered before<br />
-`run [cmd_name]` - and i will run the command for you<br />
-`save [cmd]` - and i will remember the command for you<br />
+`run [cmd_name]|[cmd_name]` - and i will run the command for you<br />
+`save|s [cmd]` - and i will remember the command for you<br />
 `list|l [names|commands]`- and i will show you everything i remember, 
 if `names` then i will print only names, 
 if commands then only commands, by default i will print all 
 
 ###Usage:
-`mem ps axu` or `mem save 'ps axu'` - will save command 'ps axu' to the memory<br />
-`mem 'ps axu | grep proc | ls -la && cd /tmp'` - to save a long command just put it in single braces<br />
+`mem save` - will open interactive dialog to save command 'ps axu' to the memory and to add an alias<br />
 `mem l names` - will show the names for all memorized commands<br />
 `mem rm my super command` - will remove from memory command with name 'my super command'<br />
+`mem run ls` or `mem ls` - will run previously saved ls command<br />
 
 Now you know!

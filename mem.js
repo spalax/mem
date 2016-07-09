@@ -19,19 +19,17 @@ if (process.argv.length < 3 ||
                   "do it instead :)\n\n";
     console.log(caption.white.bold);
     console.log("Commands which i support are:\n".warn +
-                "if nothing defined is eqaul with ".white.bold + "mem save [cmd]".cmd + "\n" +
                 "remind|r [cmd_name]".cmd + " - and i will remind you the command which you ask me to remember\n" +
                 "forget|rm [cmd_name]".cmd + " - and i will forget command which i remembered before\n" +
-                "run [cmd_name]".cmd + " - and i will run the command for you\n" +
-                "save [cmd]".cmd + " - and i will remember the command for you\n" +
-                "list|l [names|commands]".cmd + "- and i will show you everything i remember, " +
-                "\nif `names` then i will print only names, \nif commands then only commands, " +
-                "by default i will print all \n\n" +
+                "run [cmd_name]|[cmd_name]".cmd + " - and i will run the command for you\n" +
+                "save|s".cmd + " - and i will remember the command for you\n" +
+                "list|l [names]".cmd + "- and i will show you everything i remember, " +
+                                       "\nif `names` then i will print only names\n\n" +
                 "Usage:\n".warn +
-                "mem ps axu".cmd + " or " + "mem save 'ps axu'".cmd + " - will save command 'ps axu' to the memory\n" +
-                "mem 'ps axu | grep proc | ls -la && cd /tmp'".cmd + " - to save a long command just put it in single braces\n" +
+                "mem save".cmd + " - will open interactive dialog to save command 'ps axu' to the memory and to add an alias\n" +
                 "mem l names".cmd + " - will show the names for all memorized commands\n" +
-                "mem rm my super command".cmd + " - will remove from memory command with name 'my super command'\n\n" +
+                "mem rm my super command".cmd + " - will remove from memory command with name 'my super command'\n" +
+                "mem run ls".cmd + " or " + "mem ls" + " - will run previously saved ls command\n\n" +
                 "Now you know!".white);
     process.exit(0);
 }
