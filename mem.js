@@ -40,7 +40,7 @@ const action = process.argv[2];
 const argvs = process.argv.splice(3, Number.MAX_VALUE);
 
 const fs = require('fs');
-const actions = ['remind', 'r', 'forget', 'rm', 'run', 'list', 'l'];
+const actions = ['remind', 'r', 'forget', 'rm', 'run', 'list', 'l', 'save', 's'];
 const readline = require('readline');
 const didYouMean = require('didyoumean2');
 const rl = readline.createInterface({
@@ -88,6 +88,36 @@ const checkIsNameExistsInDb = (name) => {
     return false;
 };
 
+const printItem = (item) => {
+    console.log(item.name.warn + "\n >> " + item.cmd.cmd + "\n\n");
+};
+
+const actionRun = (argvs) => {
+    if (!argvs.length) {
+        console.log('cmd_name not defined'.err);
+        process.exit(0);
+    }
+    let cmdName = argvs.join(' ').trim(),
+        item = findSame(cmdName, 'name');
+    if (!item) {
+        let simillarItems = didYouMean(cmdName, getAllKeys('name'), {'returnType': 'all-matches'});
+        if (simillarItems.length) {
+            console.log("Did you mean: " + simillarItems.join(" or ").cmd + " ?");
+        } else {
+            console.log("Sorry but command not found".err);
+        }
+    } else {
+        var exec = require('child_process').exec;
+        exec(item.cmd, (error, stdout, stderr) => {
+            [error, stdout, stderr].forEach((data) => {
+                data && data.length && console.log(data);
+            });
+            process.exit(0);
+        });
+    }
+};
+
+
 if (!fs.existsSync(dbDir)){
     fs.mkdirSync(dbDir, '0700');
 }
@@ -98,36 +128,45 @@ if (fs.existsSync(dbPath)) {
     content = [];
 }
 
-if (actions.indexOf(action) === -1 || action === 'save') {
-    let command = action + " " + argvs.join(' '),
-        sameItem = findSame();
+if (action === 'save' || action === 's') {
+    let command = action + " " + argvs.join(' ');
+    rl.question('Insert command:\n>>', (command) => {
+        let sameItem = findSame(command);
+        if (sameItem) {
+            console.log("Already stored item:\n".warn);
+            printItem(sameItem);
+            process.exit(1);
+        }
 
-    if (sameItem) {
-        console.log("Alaredy stored item:\n".warn);
-        console.log(sameItem.name.warn + "\n\t" + sameItem.cmd.cmd + "\n\n");
-    } else {
-        rl.question('How do you want to name this command ? ', (cmdName) => {
-            let name = cmdName.trim();
+        const nameTheCommand = () => {
+            rl.question('Name your command:\n>>', (cmdName) => {
+                let name = cmdName.trim();
+                if (name.length < 1) {
+                    console.log("Command name couldn't be empty".err);
+                    return nameTheCommand();
+                }
 
-            if (name.length < 1) {
-                console.log("Command name couldn't be empty".err);
+                if (actions.indexOf(name) !== -1) {
+                    console.log("Already reserved word [" + actions.join(',') + "], please " +
+                                "use another name for command".err);
+                    return nameTheCommand();
+                }
+
+                let item = checkIsNameExistsInDb(name);
+                if (item) {
+                    console.log("Command already exists".warn,
+                        item.cmd.cmd);
+                    return nameTheCommand();
+                }
+                content.push({'name': name, 'cmd': command});
+                saveContent(content);
+                console.log("Command stored to memory:\n".suc, command.cmd);
                 rl.close();
-                process.exit(0);
-            }
+            });
+        };
 
-            let item = checkIsNameExistsInDb(name);
-            if (item) {
-                console.log("Command already exists".warn,
-                            item.cmd.cmd);
-                rl.close();
-                return;
-            }
-            content.push({'name': name, 'cmd': command});
-            saveContent(content);
-            console.log("Command stored to memory:\n".suc, command.cmd);
-            rl.close();
-        });
-    }
+        nameTheCommand();
+    });
 } else {
     if (content.length < 1) {
         console.log("Memory is clean! Please add something first .. :) ");
@@ -145,14 +184,13 @@ if (actions.indexOf(action) === -1 || action === 'save') {
 
         if (!item) {
             let simillarItems = didYouMean(cmdName, getAllKeys('name'), {'returnType': 'all-matches'});
-            console.log(simillarItems);
             if (simillarItems.length) {
                 console.log("Did you mean: " + simillarItems.join(" or ").cmd + " ?");
             } else {
                 console.log("Sorry but command not found".err);
             }
         } else {
-            console.log(item.name.warn + "\n >> " + item.cmd.cmd);
+            printItem(item);
         }
         process.exit(0);
     } else if (action === 'list'|| action == 'l') {
@@ -162,7 +200,7 @@ if (actions.indexOf(action) === -1 || action === 'save') {
             if (cond === 'names' || cond === 'name') {
                 console.log(item.name.warn);
             } else {
-                console.log(item.name.warn + "\n >> " + item.cmd.cmd + "\n\n");
+                printItem(item);
             }
         });
         process.exit(0);
@@ -188,27 +226,9 @@ if (actions.indexOf(action) === -1 || action === 'save') {
         }
         process.exit(0);
     } else if (action === 'run') {
-        if (!argvs.length) {
-            console.log('cmd_name not defined'.err);
-            process.exit(0);
-        }
-        let cmdName = argvs.join(' ').trim(),
-            item = findSame(cmdName, 'name');
-        if (!item) {
-            let simillarItems = didYouMean(cmdName, getAllKeys('name'), {'returnType': 'all-matches'});
-            if (simillarItems.length) {
-                console.log("Did you mean: " + simillarItems.join(" or ").cmd + " ?");
-            } else {
-                console.log("Sorry but command not found".err);
-            }
-        } else {
-            var exec = require('child_process').exec;
-            exec(item.cmd, (error, stdout, stderr) => {
-                [error, stdout, stderr].forEach((data) => {
-                    data && data.length && console.log(data);
-                });
-                process.exit(0);
-            });
-        }
+        actionRun(argvs);
+    } else {
+        argvs.unshift(action);
+        actionRun(argvs);
     }
 }
