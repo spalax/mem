@@ -106,13 +106,19 @@ const actionRun = (argvs) => {
         }
     } else {
         console.log(item.cmd, "\n");
-        var exec = require('child_process').exec;
+        let exec = require('child_process').exec;
         console.log("RUN:\n".rainbow)
-        exec(item.cmd, (error, stdout, stderr) => {
-            [error, stdout, stderr].forEach((data) => {
-                data && data.length && console.log(data);
-            });
+        let proc = exec(item.cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.log("ERROR >>", error);
+            }
             process.exit(0);
+        });
+        proc.stdout.on('data', function(data) {
+            console.log(data.green);
+        });
+        proc.stderr.on('data', function(data) {
+            console.log(data.err);
         });
     }
 };
