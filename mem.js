@@ -107,7 +107,9 @@ const actionRun = (argvs) => {
             console.log("Sorry but command not found".err);
         }
     } else {
+        console.log(item.cmd, "\n");
         var exec = require('child_process').exec;
+        console.log("RUN:\n".rainbow)
         exec(item.cmd, (error, stdout, stderr) => {
             [error, stdout, stderr].forEach((data) => {
                 data && data.length && console.log(data);
