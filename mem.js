@@ -107,14 +107,22 @@ if (actions.indexOf(action) === -1 || action === 'save') {
         console.log(sameItem.name.warn + "\n\t" + sameItem.cmd.cmd + "\n\n");
     } else {
         rl.question('How do you want to name this command ? ', (cmdName) => {
-            let item = checkIsNameExistsInDb(cmdName);
+            let name = cmdName.trim();
+
+            if (name.length < 1) {
+                console.log("Command name couldn't be empty".err);
+                rl.close();
+                process.exit(0);
+            }
+
+            let item = checkIsNameExistsInDb(name);
             if (item) {
                 console.log("Command already exists".warn,
                             item.cmd.cmd);
                 rl.close();
                 return;
             }
-            content.push({'name': cmdName, 'cmd': command});
+            content.push({'name': name, 'cmd': command});
             saveContent(content);
             console.log("Command stored to memory:\n".suc, command.cmd);
             rl.close();
@@ -132,7 +140,7 @@ if (actions.indexOf(action) === -1 || action === 'save') {
             process.exit(0);
         }
 
-        let cmdName = argvs.join(' '),
+        let cmdName = argvs.join(' ').trim(),
             item = findSame(cmdName, 'name');
 
         if (!item) {
@@ -148,7 +156,7 @@ if (actions.indexOf(action) === -1 || action === 'save') {
         }
         process.exit(0);
     } else if (action === 'list'|| action == 'l') {
-        let cond = argvs.join(' ');
+        let cond = argvs.join(' ').trim();
         console.log("Here are what we have:");
         content.forEach((item) => {
             if (cond === 'names' || cond === 'name') {
@@ -164,9 +172,10 @@ if (actions.indexOf(action) === -1 || action === 'save') {
             process.exit(0);
         }
         let forgotten,
-            cmdName = argvs.join(' ');
+            cmdName = argvs.join(' ').trim();
+
         for (let item in content) {
-            if (content[item].name === cmdName.trim()) {
+            if (content[item].name === cmdName) {
                 forgotten = content[item];
                 content.splice(item, 1);
                 console.log
@@ -183,7 +192,7 @@ if (actions.indexOf(action) === -1 || action === 'save') {
             console.log('cmd_name not defined'.err);
             process.exit(0);
         }
-        let cmdName = argvs.join(' '),
+        let cmdName = argvs.join(' ').trim(),
             item = findSame(cmdName, 'name');
         if (!item) {
             let simillarItems = didYouMean(cmdName, getAllKeys('name'), {'returnType': 'all-matches'});
