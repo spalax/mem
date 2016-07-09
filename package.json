@@ -1,0 +1,31 @@
+{
+  "name": "mem",
+  "version": "0.0.0",
+  "description": "Console application which remember all your bash commands, and simple to maintain the commands",
+  "main": "mem.js",
+  "dependencies": {
+    "colors": "1.1.2",
+    "didyoumean2": "1.0.2"
+  },
+  "devDependencies": {
+    "enclose": "2.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spalax/mem.git"
+  },
+  "keywords": [
+    "remember",
+    "bash",
+    "commands"
+  ],
+  "author": "Mil's",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spalax/mem/issues"
+  },
+  "homepage": "https://github.com/spalax/mem#readme"
+}
