@@ -16,14 +16,17 @@ do it instead :)
 - `npm i`
 - ``p=`pwd` && cd /usr/bin && sudo ln -s $p/mem.js mem && cd -``
 - `mem help`
+
 ###Or if you do not want install node and deps just copy binary 
- ( if arch will match [Mach-O 64-bit executable x86_64])
-    
-- `git clone https://github.com/spalax/mem.git`
-- `cd mem/bin`
+ ( if arch will match [Mach-O 64-bit executable x86_64])    
+- `wget https://github.com/spalax/mem/raw/master/bin/mem.tgz`
 - `tar -xzvf mem.tgz`
-- `sudo cp mem /usr/bin`
+- `sudo mv mem /usr/bin`
 - `mem help`
+
+It is compiled with EncloseJS that's why, on each call you will see this:<br/>
+``*** Evaluation version. Please subscribe to full version.``<br/>
+If it will irritating you, you can just run `mem` like this `mem [commands] | sed -n '1!p'` 
 
 ##CLI
 ###Commands:
