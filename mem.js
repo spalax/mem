@@ -39,6 +39,7 @@ const argvs = process.argv.splice(3, Number.MAX_VALUE);
 
 const fs = require('fs');
 const actions = ['remind', 'r', 'forget', 'rm', 'run', 'list', 'l', 'save', 's'];
+const longActons = ['remind', 'forget', 'run', 'list', 'save'];
 const readline = require('readline');
 const didYouMean = require('didyoumean2');
 const rl = readline.createInterface({
@@ -102,8 +103,9 @@ const actionRun = (argvs) => {
         if (simillarItems.length) {
             console.log("Did you mean: " + simillarItems.join(" or ").cmd + " ?");
         } else {
-            console.log("Sorry but command not found".err);
+            console.log("[".err + cmdName.cmd + "] not found".err);
         }
+        process.exit(0);
     } else {
         console.log(item.cmd, "\n");
         let exec = require('child_process').exec;
@@ -134,6 +136,16 @@ if (fs.existsSync(dbPath)) {
     content = [];
 }
 
+if (action === '_commands-shortlist') {
+    console.log(longActons.join(' ') + getAllKeys('name').join(' '));
+    process.exit(0);
+}
+
+if (action === '_list-shortlist') {
+    console.log(getAllKeys('name').join(" "));
+    process.exit(0);
+}
+
 if (action === 'save' || action === 's') {
     let command = action + " " + argvs.join(' ');
     rl.question('Insert command:\n>>', (command) => {
@@ -146,7 +158,8 @@ if (action === 'save' || action === 's') {
 
         const nameTheCommand = () => {
             rl.question('Name your command:\n>>', (cmdName) => {
-                let name = cmdName.trim();
+                let name = cmdName.trim().split(' ').join('-');
+
                 if (name.length < 1) {
                     console.log("Command name couldn't be empty".err);
                     return nameTheCommand();
