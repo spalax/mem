@@ -3,8 +3,8 @@ _mem_autocomplete_script()
 
   COMPREPLY=()
       cur="${COMP_WORDS[COMP_CWORD]}"
-      subcommands_1=$(/usr/bin/mem _commands-shortlist) #возможные подкоманды первого уровня
-      subcommands_list=$(/usr/bin/mem _list-shortlist)
+      subcommands_1=$(/usr/bin/env mem _commands-shortlist) #возможные подкоманды первого уровня
+      subcommands_list=$(/usr/bin/env mem _list-shortlist)
 
       if [[ ${COMP_CWORD} == 1 ]] ; then # цикл определения автодополнения при вводе подкоманды первого уровня
           COMPREPLY=( $(compgen -W "${subcommands_1}" -- ${cur}) )
