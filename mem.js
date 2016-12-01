@@ -107,7 +107,7 @@ const actionRun = (argvs) => {
         }
         process.exit(0);
     } else {
-        console.log(item.cmd, "\n");
+        console.log(item.cmd.cmd, "\n");
         let exec = require('child_process').exec;
         console.log("RUN:\n".rainbow)
         let proc = exec(item.cmd, (error, stdout, stderr) => {
